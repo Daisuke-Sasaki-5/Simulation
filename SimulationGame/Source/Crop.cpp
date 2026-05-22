@@ -40,7 +40,7 @@ void Crop::NextDay()
 	if (water > 0)
 	{
 		// ¬’·‚ği‚ß‚é
-		growDays = 3;
+		growth += 3;
 
 		// ¬’·ó‘Ô‚É‚·‚é
 		state = CropState::Growing;

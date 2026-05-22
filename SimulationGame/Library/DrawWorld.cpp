@@ -1,5 +1,6 @@
 #include <DxLib.h>
 #include "../Source/Screen.h"
+#include "../Source/PlayScene.h"
 #include "../ImGui/imgui_impl_dxlib.hpp"
 
 // プログラムは WinMain から始まります
@@ -21,9 +22,14 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		return -1;			// エラーが起きたら直ちに終了
 	}
 
+	PlayScene scene;
+
 	while (ProcessMessage() == 0)
 	{
 		ClearDrawScreen();
+
+		scene.Update();
+		scene.Draw();
 
 		ScreenFlip();
 
