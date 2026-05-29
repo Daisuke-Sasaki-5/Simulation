@@ -8,6 +8,8 @@ PlayScene::PlayScene()
 
 	// 初期所持金
 	money = 100;
+
+	isGameOver = false;
 }
 
 PlayScene::~PlayScene()
@@ -16,12 +18,22 @@ PlayScene::~PlayScene()
 
 void PlayScene::Update()
 {
+	// 作物の選択
+	if (CheckHitKey(KEY_INPUT_1))selectIndex = 0;
+	if (CheckHitKey(KEY_INPUT_2))selectIndex = 1;
+	if (CheckHitKey(KEY_INPUT_3))selectIndex = 2;
+	if (CheckHitKey(KEY_INPUT_4))selectIndex = 3;
+
 	// スペースキーで次の日へ進める
 	if (CheckHitKey(KEY_INPUT_SPACE))
 	{
 		if (prevNextDayKey == false)
 		{
-			crop.NextDay();
+			for (int i = 0; i < 4; i++)
+			{
+				crops[i].NextDay();
+			}
+			money -= 10;
 
 			// 水タンク補充
 			playerWater = maxPlayerWater;
@@ -36,25 +48,25 @@ void PlayScene::Update()
 	// Wキーで水を増やす
 	if (CheckHitKey(KEY_INPUT_W))
 	{
-		if (prevAddWaterKey == false)
+		if (!prevAddWaterKey)
 		{
 			// Playerが水を１以上持っているとき
-			if (playerWater >= 1 && crop.GetState() != CropState::Dead)
+			if (playerWater >= 1)
 			{
-				crop.AddWater(1);
+				crops[selectIndex].AddWater(1);
 
 				playerWater--;
 			}
+			prevAddWaterKey = true;
 		}
-		prevAddWaterKey = true;
 	}
 	else
 	{
 		prevAddWaterKey = false;
 	}
-
-	// 収穫状態の時
-	if (crop.CanHarvest())
+	
+		// 収穫状態の時
+	if (crops[selectIndex].CanHarvest())
 	{
 		// Entnerキーで収穫する
 		if (CheckHitKey(KEY_INPUT_RETURN))
@@ -63,7 +75,7 @@ void PlayScene::Update()
 			{
 				money += 10;
 
-				crop = Crop();
+				crops[selectIndex] = Crop();
 			}
 			prevHarvestKey = true;
 		}
@@ -72,42 +84,58 @@ void PlayScene::Update()
 			prevHarvestKey = false;
 		}
 	}
+
+	// お金が0以下になら
+	if (money <= 0)
+	{
+		isGameOver = true;
+	}
 }
 
 void PlayScene::Draw()
 {
-	DrawFormatString(100, 100, GetColor(255, 255, 255), "Water : %d", crop.GetWater());
-	DrawFormatString(100, 150, GetColor(255, 255, 255), "Growth : %d", crop.GetGrowth());
-
-	// 状態表示用文字列
-	const char* stateText = " ";
-
-	// 作物状態によって文字を変える
-	switch (crop.GetState())
+	for(int i = 0; i < 4; i++)
 	{
-	case CropState::Seed:
-		stateText = "Seed";
-		break;
-
-	case CropState::Growing:
-		stateText = "Growing";
-		break;
-
-	case CropState::Harvest:
-		stateText = "Harvest";
-		break;
-
-	case CropState::Dead:
-		stateText = "Dead";
-		break;
+		DrawFormatString(100, 100 + i * 100, GetColor(255, 255, 255), TEXT("Water : %d"), crops[i].GetWater());
+		DrawFormatString(100, 150 + i * 100, GetColor(255, 255, 255), TEXT("Growth : %d"), crops[i].GetGrowth());
 	}
 
-	// 状態表示
-	DrawFormatString(100, 200, GetColor(255, 255, 0), "State : %s", stateText);
+	// 作物状態によって文字を変える
+	for (int i = 0; i < 4; i++)
+	{
+		const char* stateText = "Unknown";
+	
+		switch (crops[i].GetState())
+		{
+		case CropState::Seed:
+			stateText = "Seed";
+			break;
+
+		case CropState::Growing:
+			stateText = "Growing";
+			break;
+
+		case CropState::Harvest:
+			stateText = "Harvest";
+			break;
+
+		case CropState::Dead:
+			stateText = "Dead";
+			break;
+		}
+
+		// 状態表示
+		DrawFormatString(300, 300 + i * 30, GetColor(255, 255, 0), TEXT("State[%d] : %s"), i, stateText);
+	}
 
 	// 水タンク表示
-	DrawFormatString(100, 250, GetColor(255, 255, 255), "Tank : %d / %d", playerWater, maxPlayerWater);
+	DrawFormatString(300, 550, GetColor(255, 255, 255), TEXT("Tank : %d / %d"), playerWater, maxPlayerWater);
 
 	// 所持金表示
-	DrawFormatString(100, 300, GetColor(255, 255, 255), "Money : %d", money);
+	DrawFormatString(300, 600, GetColor(255, 255, 255), TEXT("Money : %d"), money);
+
+	if (isGameOver)
+	{
+		DrawString(400, 300, "GAME OVER", GetColor(255, 0, 0));
+	}
 }

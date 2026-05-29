@@ -36,26 +36,32 @@ void Crop::NextDay()
 	// …‚ğŒ¸‚ç‚·;
 	water -= waterDecay;
 
+	if (water < 0)
+	{
+		water = 0;
+	}
+
 	// …‚ª‚ ‚éê‡
 	if (water > 0)
 	{
 		// ¬’·‚ği‚ß‚é
-		growth += 3;
+		growth += growthSpeed;
 
-		// ¬’·ó‘Ô‚É‚·‚é
-		state = CropState::Growing;
+		if (growth >= maxGrouth)
+		{
+			// ûŠn‰Â”\
+			state = CropState::Harvest;
+		}
+		else
+		{
+			// ¬’·ó‘Ô‚É‚·‚é
+			state = CropState::Growing;
+		}
 	}
 	else
 	{
 		// ŒÍ‚êó‘Ô
 		state = CropState::Dead;
-	}
-
-	// ¬’·‚ª100ˆÈã‚È‚ç
-	if (growth >= 100)
-	{
-		// ûŠn‰Â”\ó‘Ô
-		state = CropState::Harvest;
 	}
 }
 

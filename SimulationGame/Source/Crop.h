@@ -29,6 +29,12 @@ private:
 	// 作物の1日ごとの水分消費量
 	int waterDecay;
 
+	// 作物ごとの成長スピード
+	int growthSpeed;
+
+	// 作物ごとの収穫可能日数
+	int maxGrouth;
+
 	// 売値
 	int price;
 
