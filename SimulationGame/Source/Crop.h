@@ -1,6 +1,16 @@
 #pragma once
 
 /// <summary>
+/// 作物のタイプ
+/// </summary>
+enum class CropType
+{
+	Cheap,
+	Normal,
+	Rare
+};
+
+/// <summary>
 /// 作物成長状態
 /// </summary>
 enum class CropState
@@ -41,8 +51,12 @@ private:
 	// 作物の状態
 	CropState state;
 
+	// 作物の種類
+	CropType type;
+
 public:
 	Crop();
+	Crop(CropType t);
 	~Crop();
 
 	void Update();
@@ -60,6 +74,13 @@ public:
 	// getter(表示確認用)
 	int GetWater() const;
 	int GetGrowth() const;
+
+	int GetPrice() const;
+
+	int GetMaxWater() const;
+	int GetMaxGrowth() const;
+
+	CropType GetType() const;
 
 	CropState GetState() const;
 

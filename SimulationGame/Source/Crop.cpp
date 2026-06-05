@@ -1,22 +1,47 @@
 #include "Crop.h"
 #include "PlayScene.h"
 
-Crop::Crop()
+Crop::Crop() : Crop(CropType::Cheap)
+{
+}
+
+Crop::Crop(CropType t)
 {
 	// çÏï®ÅEêÖèâä˙âª
 
 	water = 20;
 	maxWater = 20;
-
 	growth = 0;
-
-	growDays = 0;
 
 	waterDecay = 1;
 
-	price = 10;
-
 	state = CropState::Seed;
+
+	type = t;
+
+	// éÌóﬁÇ≈ç∑ÇïtÇØÇÈ
+	switch (type)
+	{
+	case CropType::Cheap:
+		growthSpeed = 10;
+		maxGrouth = 30;
+		waterDecay = 1;
+		price = 5;
+		break;
+	case CropType::Normal:
+		growthSpeed = 6;
+		maxGrouth = 50;
+		waterDecay = 2;
+		price = 20;
+		break;
+	case CropType::Rare:
+		growthSpeed = 4;
+		maxGrouth = 80;
+		waterDecay = 3;
+		price = 35;
+		break;
+	}
+	growDays = 0;
 }
 
 Crop::~Crop()
@@ -91,6 +116,26 @@ int Crop::GetWater() const
 int Crop::GetGrowth() const
 {
 	return growth;
+}
+
+int Crop::GetPrice() const
+{
+	return price;
+}
+
+int Crop::GetMaxWater() const
+{
+	return maxWater;
+}
+
+int Crop::GetMaxGrowth() const
+{
+	return maxGrouth;
+}
+
+CropType Crop::GetType() const
+{
+	return type;
 }
 
 CropState Crop::GetState() const

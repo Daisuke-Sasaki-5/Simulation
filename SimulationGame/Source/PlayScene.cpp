@@ -9,6 +9,11 @@ PlayScene::PlayScene()
 	// 初期所持金
 	money = 100;
 
+	crops[0] = Crop(CropType::Cheap);
+	crops[1] = Crop(CropType::Cheap);
+	crops[2] = Crop(CropType::Normal);
+	crops[3] = Crop(CropType::Rare);
+
 	isGameOver = false;
 }
 
@@ -73,9 +78,28 @@ void PlayScene::Update()
 		{
 			if (prevHarvestKey == false)
 			{
-				money += 10;
+				CropType type = crops[selectIndex].GetType();
 
-				crops[selectIndex] = Crop();
+				int sellPrice = crops[selectIndex].GetPrice();
+
+				float waterRate = (float)crops[selectIndex].GetWater() / crops[selectIndex].GetMaxWater();
+
+				// 作物の残りの水の割合で売値に補正をかける
+				if (waterRate >= 0.8f)
+				{
+					sellPrice *= 1.2f;
+				}
+				else if (waterRate >= 0.4f)
+				{
+				}
+				else if (waterRate > 0)
+				{
+					sellPrice *= 0.5f;
+				}
+
+				money += sellPrice;
+
+				crops[selectIndex] = Crop(type);
 			}
 			prevHarvestKey = true;
 		}
@@ -94,17 +118,43 @@ void PlayScene::Update()
 
 void PlayScene::Draw()
 {
-	for(int i = 0; i < 4; i++)
+	for (int i = 0; i < 4; i++)
 	{
-		DrawFormatString(100, 100 + i * 100, GetColor(255, 255, 255), TEXT("Water : %d"), crops[i].GetWater());
+		// 水割合を計算
+		float waterRate = (float)crops[i].GetWater() / crops[i].GetMaxWater();
+
+		int waterColor;
+
+		if (waterRate <= 0.2f)
+		{
+			waterColor = GetColor(255, 0, 0);
+		}
+		else if (waterRate <= 0.5f)
+		{
+			waterColor = GetColor(255, 255, 0);
+		}
+		else
+		{
+			waterColor = GetColor(0, 255, 0);
+		}
+
+		// 成長割合計算
+		float growtRate = (float)crops[i].GetGrowth() / crops[i].GetMaxGrowth();
+
+		int barLength = 10;
+		int fillLength = growtRate * barLength;
+
+		DrawFormatString(100, 100 + i * 100, waterColor, TEXT("Water : %d"), crops[i].GetWater());
 		DrawFormatString(100, 150 + i * 100, GetColor(255, 255, 255), TEXT("Growth : %d"), crops[i].GetGrowth());
 	}
+
+	DrawFormatString(50, 100 + selectIndex * 100, GetColor(255, 255, 0), ">");
 
 	// 作物状態によって文字を変える
 	for (int i = 0; i < 4; i++)
 	{
 		const char* stateText = "Unknown";
-	
+
 		switch (crops[i].GetState())
 		{
 		case CropState::Seed:
