@@ -14,9 +14,13 @@ private:
 	// Player‚ÌŠ‹à
 	int money;
 
+	// ”¨‚ÌˆÛ”ï
+	int runningCost = 3;
+
 	bool prevNextDayKey;
 	bool prevAddWaterKey;
 	bool prevHarvestKey;
+	bool prevRefillKey;
 
 	// ‘I‘ğ’†
 	int selectIndex = 0;

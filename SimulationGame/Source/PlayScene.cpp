@@ -1,5 +1,6 @@
 #include "PlayScene.h"
 #include "DxLib.h"
+#include <string>
 
 PlayScene::PlayScene()
 {
@@ -38,10 +39,7 @@ void PlayScene::Update()
 			{
 				crops[i].NextDay();
 			}
-			money -= 10;
-
-			// 水タンク補充
-			playerWater = maxPlayerWater;
+			money -= runningCost;
 		}
 		prevNextDayKey = true;
 	}
@@ -109,8 +107,56 @@ void PlayScene::Update()
 		}
 	}
 
-	// お金が0以下になら
-	if (money <= 0)
+	// 水の補充
+	if (CheckHitKey(KEY_INPUT_R))
+	{
+		if (!prevRefillKey)
+		{
+			int neadWater = maxPlayerWater - playerWater;
+
+			int cost = neadWater * 2;
+
+			if (money >= cost)
+			{
+				money -= cost;
+
+				playerWater = maxPlayerWater;
+			}
+		}
+
+		prevRefillKey = true;
+	}
+	else
+	{
+		prevRefillKey = false;
+	}
+
+	// ==== ゲームオーバー条件を明確に ====
+	bool canHarvest = false;
+	
+	// 収穫できる作物が1つでもあるか?
+	auto canHarvest = [&]()
+		{
+			for (int i; i < 4; i++)
+			{
+				if (crops[i].CanHarvest())return true;
+			}
+			return false;
+		}();
+
+	// 次の日へ進めるか?
+	auto canNextDay = (money >= runningCost);
+
+	// 水を補充できるか
+	auto canRefill = [&]()
+		{
+			int needWater = maxPlayerWater - playerWater;
+			int refillCost = needWater * 2;
+			return money >= refillCost;
+		}();
+
+	// 水を補充するお金もなく、作物も収穫できないなら
+	if (!canHarvest && !canNextDay && !canRefill)
 	{
 		isGameOver = true;
 	}
@@ -139,13 +185,30 @@ void PlayScene::Draw()
 		}
 
 		// 成長割合計算
-		float growtRate = (float)crops[i].GetGrowth() / crops[i].GetMaxGrowth();
+		float growRate = (float)crops[i].GetGrowth() / crops[i].GetMaxGrowth();
 
 		int barLength = 10;
-		int fillLength = growtRate * barLength;
+		int fillLength = growRate * barLength;
+
+		// 成長割合の表示
+		std::string bar = "[";
+
+		for (int j = 0; j < fillLength; j++)
+		{
+			bar += "■";
+		}
+
+		for (int j = fillLength; j < barLength; j++)
+		{
+			bar += "□";
+		}
+
+		bar += "]";
 
 		DrawFormatString(100, 100 + i * 100, waterColor, TEXT("Water : %d"), crops[i].GetWater());
 		DrawFormatString(100, 150 + i * 100, GetColor(255, 255, 255), TEXT("Growth : %d"), crops[i].GetGrowth());
+
+		DrawString(100, 170 + i * 100, bar.c_str(), GetColor(0, 255, 255));
 	}
 
 	DrawFormatString(50, 100 + selectIndex * 100, GetColor(255, 255, 0), ">");
