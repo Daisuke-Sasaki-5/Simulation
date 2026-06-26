@@ -21,12 +21,45 @@ private:
 	bool prevAddWaterKey;
 	bool prevHarvestKey;
 	bool prevRefillKey;
+	bool prevLeftKey;
+	bool prevRightKey;
+	bool prevPlantKey;
+
+	bool prevSeed1Key;
+	bool prevSeed2Key;
+	bool prevSeed3Key;
 
 	// 選択中
 	int selectIndex = 0;
 
+	CropType selectCropType = CropType::Cheap;
+
 	// ゲームオーバーか
 	bool isGameOver;
+
+	bool IsKeyPressedOnce(int key, bool& prevFlag);
+
+	// Update関数分け
+
+	void UpdateSelectField();
+	void UpdateSelectSeed();
+
+	void UpdateInput();
+
+	void UpdateNextDay();
+	void UpdateWater();
+	void UpdateHarvest();
+	void UpdatePlant();
+	int GetSeedPrice(CropType type);
+	void UpdateRefill();
+
+	void CheckGameOver();
+
+	// Draw関数分け
+	void DrawCropInfo();   // 作物の表示
+	void DrawCropState();  // 作物の状態の表示
+	void DrawPlayerInfo(); // お金と水の表示
+	void DrawGameOver();   // ゲームオーバー表示
 
 public:
 	PlayScene();

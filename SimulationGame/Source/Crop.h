@@ -15,6 +15,7 @@ enum class CropType
 /// </summary>
 enum class CropState
 {
+	Empty,   // ‰½‚àA‚¦‚Ä‚È‚¢
 	Seed,    // í
 	Growing, // ¬’·
 	Harvest, // ûŠn
@@ -84,4 +85,6 @@ public:
 
 	CropState GetState() const;
 
+	// ”¨‚ğ‹ó‚É‚·‚é
+	void Clear();
 };
