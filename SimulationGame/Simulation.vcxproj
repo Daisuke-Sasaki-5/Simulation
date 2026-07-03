@@ -145,6 +145,7 @@
     <ClCompile Include="ImGui\imgui_widgets.cpp" />
     <ClCompile Include="Library\DrawWorld.cpp" />
     <ClCompile Include="Source\Crop.cpp" />
+    <ClCompile Include="Source\GameManager.cpp" />
     <ClCompile Include="Source\PlayScene.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -159,6 +160,7 @@
     <ClInclude Include="ImGui\imstb_textedit.h" />
     <ClInclude Include="ImGui\imstb_truetype.h" />
     <ClInclude Include="Source\Crop.h" />
+    <ClInclude Include="Source\GameManager.h" />
     <ClInclude Include="Source\PlayScene.h" />
     <ClInclude Include="Source\Screen.h" />
   </ItemGroup>

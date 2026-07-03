@@ -9,8 +9,6 @@ PlayScene::PlayScene()
 
 	// 初期所持金
 	money = 100;
-	
-	isGameOver = false;
 }
 
 PlayScene::~PlayScene()
@@ -19,7 +17,7 @@ PlayScene::~PlayScene()
 
 void PlayScene::Update()
 {
-	if (isGameOver) { return; }
+	if (gameManager.IsGameOver() || gameManager.IsGameClear()) { return; }
 
 	UpdateInput();
 
@@ -29,7 +27,8 @@ void PlayScene::Update()
 	UpdatePlant();
 	UpdateRefill();
 
-	CheckGameOver();
+	gameManager.CheckGameOver(*this);
+	gameManager.CheckGameClear(*this);
 }
 
 void PlayScene::Draw()
@@ -37,7 +36,46 @@ void PlayScene::Draw()
 	DrawCropInfo();
 	DrawCropState();
 	DrawPlayerInfo();
-	DrawGameOver();
+
+	if (gameManager.IsGameOver())
+	{
+		DrawString(400, 300, "GAME OVER", GetColor(255, 0, 0));
+	}
+
+	if (gameManager.IsGameClear())
+	{
+		DrawString(400, 300, "GAME Clear", GetColor(0, 255, 0));
+	}
+}
+
+/// <summary>
+/// 外部参照用
+/// </summary>
+/// <returns></returns>
+
+int PlayScene::GetMoney() const
+{
+	return money;
+}
+
+int PlayScene::GetPlayerWater() const
+{
+	return playerWater;
+}
+
+int PlayScene::GetMaxPlayerWater() const
+{
+	return maxPlayerWater;
+}
+
+int PlayScene::GetRunningCost() const
+{
+	return runningCost;
+}
+
+const Crop& PlayScene::GetCrop(int index) const
+{
+	return crops[index];
 }
 
 // キー入力を共通化
@@ -188,7 +226,7 @@ void PlayScene::UpdatePlant()
 {
 	if (crops[selectIndex].GetState() != CropState::Empty) { return; }
 
-	if (IsKeyPressedOnce(KEY_INPUT_RETURN, prevPlantKey))
+	if (IsKeyPressedOnce(KEY_INPUT_P, prevPlantKey))
 	{
 		int cost = GetSeedPrice(selectCropType);
 
@@ -242,47 +280,18 @@ void PlayScene::UpdateRefill()
 }
 
 /// <summary>
-/// ゲームオーバー判定
-/// </summary>
-void PlayScene::CheckGameOver()
-{
-	// ==== ゲームオーバー条件を明確に ====
-
-// 収穫できる作物が1つでもあるか?
-	auto canHarvest = [&]()
-		{
-			for (int i = 0; i < 4; i++)
-			{
-				if (crops[i].CanHarvest())return true;
-			}
-			return false;
-		}();
-
-	// 次の日へ進めるか?
-	auto canNextDay = (money >= runningCost);
-
-	// 水を補充できるか
-	auto canRefill = [&]()
-		{
-			int needWater = maxPlayerWater - playerWater;
-			int refillCost = needWater * 2;
-			return money >= refillCost;
-		}();
-
-	// 水を補充するお金もなく、作物も収穫できないなら
-	if (!canHarvest && !canNextDay && !canRefill)
-	{
-		isGameOver = true;
-	}
-}
-
-/// <summary>
 /// 作物の成長度合いの表示
 /// </summary>
 void PlayScene::DrawCropInfo()
 {
 	for (int i = 0; i < 4; i++)
 	{
+		if (crops[i].GetState() == CropState::Empty)
+		{
+			DrawString(100, 100 + i * 100, "Empty", GetColor(255, 255, 255));
+			continue;
+		}
+
 		// 水割合を計算
 		float waterRate = (float)crops[i].GetWater() / crops[i].GetMaxWater();
 
@@ -384,15 +393,22 @@ void PlayScene::DrawPlayerInfo()
 
 	// 所持金表示
 	DrawFormatString(300, 600, GetColor(255, 255, 255), TEXT("Money : %d"), money);
-}
 
-/// <summary>
-/// ゲームオーバーの表示
-/// </summary>
-void PlayScene::DrawGameOver()
-{
-	if (isGameOver)
+	// 選択中の種表示
+	const char* seedName = "";
+
+	switch (selectCropType)
 	{
-		DrawString(400, 300, "GAME OVER", GetColor(255, 0, 0));
+	case CropType::Cheap:
+		seedName = "Cheap";
+		break;
+	case CropType::Normal:
+		seedName = "Normal";
+		break;
+	case CropType::Rare:
+		seedName = "Rare";
+		break;
 	}
+
+	DrawFormatString(300, 650, GetColor(255, 255, 255), "Selected : %s", seedName);
 }

@@ -1,8 +1,12 @@
 #pragma once
 #include "Crop.h"
+#include "GameManager.h"
+
 class PlayScene
 {
 private:
+	GameManager gameManager;
+
 	Crop crops[4];
 
 	// Playerの現在の水の量
@@ -34,9 +38,6 @@ private:
 
 	CropType selectCropType = CropType::Cheap;
 
-	// ゲームオーバーか
-	bool isGameOver;
-
 	bool IsKeyPressedOnce(int key, bool& prevFlag);
 
 	// Update関数分け
@@ -53,13 +54,10 @@ private:
 	int GetSeedPrice(CropType type);
 	void UpdateRefill();
 
-	void CheckGameOver();
-
 	// Draw関数分け
 	void DrawCropInfo();   // 作物の表示
 	void DrawCropState();  // 作物の状態の表示
 	void DrawPlayerInfo(); // お金と水の表示
-	void DrawGameOver();   // ゲームオーバー表示
 
 public:
 	PlayScene();
@@ -67,4 +65,12 @@ public:
 
 	void Update();
 	void Draw();
+
+	// 外部参照用
+	int GetMoney() const;
+	int GetPlayerWater() const;
+	int GetMaxPlayerWater() const;
+	int GetRunningCost() const;
+
+	const Crop& GetCrop(int index)const;
 };

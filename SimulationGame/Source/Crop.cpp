@@ -9,7 +9,7 @@ Crop::Crop()
 
 	waterDecay = 0;
 	growthSpeed = 0;
-	maxGrouth = 0;
+	maxGrouth = 1;
 	price = 0;
 
 	state = CropState::Empty;
