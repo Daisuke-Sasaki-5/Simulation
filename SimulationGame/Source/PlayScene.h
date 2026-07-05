@@ -1,11 +1,16 @@
 #pragma once
 #include "Crop.h"
 #include "GameManager.h"
+#include "DrawImageManager.h"
 
 class PlayScene
 {
 private:
 	GameManager gameManager;
+	DrawImageManager drawImageManager;
+
+	// Image
+	int CarrotHandle;
 
 	Crop crops[4];
 

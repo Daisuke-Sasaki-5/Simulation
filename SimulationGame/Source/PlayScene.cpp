@@ -33,6 +33,8 @@ void PlayScene::Update()
 
 void PlayScene::Draw()
 {
+	drawImageManager.Draw(*this);
+
 	DrawCropInfo();
 	DrawCropState();
 	DrawPlayerInfo();
@@ -310,31 +312,8 @@ void PlayScene::DrawCropInfo()
 			waterColor = GetColor(0, 255, 0);
 		}
 
-		// ê¨í∑äÑçáåvéZ
-		float growRate = (float)crops[i].GetGrowth() / crops[i].GetMaxGrowth();
-
-		int barLength = 10;
-		int fillLength = growRate * barLength;
-
-		// ê¨í∑äÑçáÇÃï\é¶
-		std::string bar = "[";
-
-		for (int j = 0; j < fillLength; j++)
-		{
-			bar += "Å°";
-		}
-
-		for (int j = fillLength; j < barLength; j++)
-		{
-			bar += "Å†";
-		}
-
-		bar += "]";
-
 		DrawFormatString(100, 100 + i * 100, waterColor, TEXT("Water : %d"), crops[i].GetWater());
 		DrawFormatString(100, 150 + i * 100, GetColor(255, 255, 255), TEXT("Growth : %d"), crops[i].GetGrowth());
-
-		DrawString(100, 170 + i * 100, bar.c_str(), GetColor(0, 255, 255));
 
 		if (crops[i].GetState() == CropState::Empty)
 		{
