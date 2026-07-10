@@ -62,7 +62,6 @@ private:
 	// DrawŠÖ”•ª‚¯
 	void DrawCropInfo();   // ì•¨‚Ì•\¦
 	void DrawCropState();  // ì•¨‚Ìó‘Ô‚Ì•\¦
-	void DrawPlayerInfo(); // ‚¨‹à‚Æ…‚Ì•\¦
 
 public:
 	PlayScene();
@@ -76,6 +75,7 @@ public:
 	int GetPlayerWater() const;
 	int GetMaxPlayerWater() const;
 	int GetRunningCost() const;
+	int GetSelectIndex() const;
 
 	const Crop& GetCrop(int index)const;
 };

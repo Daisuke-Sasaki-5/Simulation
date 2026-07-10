@@ -17,17 +17,37 @@ DrawImageManager::DrawImageManager()
 	seedHandle = LoadGraph("Data/Image/Seed.png");
 
 	slotHandle = LoadGraph("Data/Image/Slot.png");
+	playerInfoHandle = LoadGraph("Data/Image/PlayerInfo.png");
+
+	bigFont = CreateFontToHandle(NULL, 32, 3);
 }
 
 DrawImageManager::~DrawImageManager()
 {
+	DeleteFontToHandle(bigFont);
+	DeleteGraph(carrotHandle);
+	DeleteGraph(carrotgrawHandle);
+	DeleteGraph(PumpkinHandle);
+	DeleteGraph(PumpkingrawHandle);
+	DeleteGraph(tomatoHandle);
+	DeleteGraph(tomatograwHandle);
+	DeleteGraph(emptyHandle);
+	DeleteGraph(deadHandle);
+	DeleteGraph(seedHandle);
+	DeleteGraph(slotHandle);
+	DeleteGraph(playerInfoHandle);
 }
 
 void DrawImageManager::Draw(const PlayScene& scene)
 {
+
+	DrawExtendGraph(800, 50, 1100, 400, playerInfoHandle, TRUE);
+
 	DrawSlot();
 	DrawCrop(scene);
 	DrawCropBar(scene);
+	DrawPlayerInfo(scene);
+	DrawSelectField(scene);
 }
 
 void DrawImageManager::DrawSlot()
@@ -127,5 +147,24 @@ void DrawImageManager::DrawBar(int x, int y, int width, int height, float rate, 
 	if (rate > 1.0f)rate = 1.0f;
 
 	DrawBox(x, y, x + width * rate, y + height, color, TRUE);
+}
+
+/// <summary>
+/// 所持金と水タンクの表示
+/// </summary>
+void DrawImageManager::DrawPlayerInfo(const PlayScene& scene)
+{
+	// 水タンク表示
+	DrawFormatStringToHandle(820, 250, GetColor(255, 255, 255), bigFont, TEXT("水タンク \n Tank : %d / %d"), scene.GetPlayerWater(), scene.GetMaxPlayerWater());
+	float rate = (float)scene.GetPlayerWater() / scene.GetMaxPlayerWater();
+	DrawBar(830, 330, 240, 35, rate, GetColor(0, 180, 255));
+
+	// 所持金表示
+	DrawFormatStringToHandle(830, 150, GetColor(255, 255, 255), bigFont, TEXT("所持金 \n Money : %d G"), scene.GetMoney());
+}
+
+void DrawImageManager::DrawSelectField(const PlayScene& scene)
+{
+	DrawFormatStringToHandle(250, 110 + scene.GetSelectIndex() * 150, GetColor(255, 255, 0), bigFont, ">");
 }
 

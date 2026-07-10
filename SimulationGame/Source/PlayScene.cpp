@@ -35,9 +35,26 @@ void PlayScene::Draw()
 {
 	drawImageManager.Draw(*this);
 
-	DrawCropInfo();
-	DrawCropState();
-	DrawPlayerInfo();
+	//DrawCropInfo();
+	//DrawCropState();
+
+	// 選択中の種表示
+	const char* seedName = "";
+
+	switch (selectCropType)
+	{
+	case CropType::Cheap:
+		seedName = "Cheap";
+		break;
+	case CropType::Normal:
+		seedName = "Normal";
+		break;
+	case CropType::Rare:
+		seedName = "Rare";
+		break;
+	}
+
+	DrawFormatString(300, 650, GetColor(255, 255, 255), "Selected : %s", seedName);
 
 	if (gameManager.IsGameOver())
 	{
@@ -73,6 +90,11 @@ int PlayScene::GetMaxPlayerWater() const
 int PlayScene::GetRunningCost() const
 {
 	return runningCost;
+}
+
+int PlayScene::GetSelectIndex() const
+{
+	return selectIndex;
 }
 
 const Crop& PlayScene::GetCrop(int index) const
@@ -320,8 +342,6 @@ void PlayScene::DrawCropInfo()
 			DrawString(100, 130 + i * 100, "Empty", GetColor(200, 200, 200));
 		}
 	}
-
-	DrawFormatString(50, 100 + selectIndex * 100, GetColor(255, 255, 0), ">");
 }
 
 /// <summary>
@@ -360,34 +380,4 @@ void PlayScene::DrawCropState()
 		// 状態表示
 		DrawFormatString(300, 300 + i * 30, GetColor(255, 255, 0), TEXT("State[%d] : %s"), i, stateText);
 	}
-}
-
-/// <summary>
-/// 所持金と水タンクの表示
-/// </summary>
-void PlayScene::DrawPlayerInfo()
-{
-	// 水タンク表示
-	DrawFormatString(300, 550, GetColor(255, 255, 255), TEXT("Tank : %d / %d"), playerWater, maxPlayerWater);
-
-	// 所持金表示
-	DrawFormatString(300, 600, GetColor(255, 255, 255), TEXT("Money : %d"), money);
-
-	// 選択中の種表示
-	const char* seedName = "";
-
-	switch (selectCropType)
-	{
-	case CropType::Cheap:
-		seedName = "Cheap";
-		break;
-	case CropType::Normal:
-		seedName = "Normal";
-		break;
-	case CropType::Rare:
-		seedName = "Rare";
-		break;
-	}
-
-	DrawFormatString(300, 650, GetColor(255, 255, 255), "Selected : %s", seedName);
 }
