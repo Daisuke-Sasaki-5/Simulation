@@ -147,7 +147,10 @@
     <ClCompile Include="Source\Crop.cpp" />
     <ClCompile Include="Source\DrawImageManager.cpp" />
     <ClCompile Include="Source\GameManager.cpp" />
+    <ClCompile Include="Source\MessageManager.cpp" />
     <ClCompile Include="Source\PlayScene.cpp" />
+    <ClCompile Include="Source\SceneManager.cpp" />
+    <ClCompile Include="Source\TitleScene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ImGui\imconfig.h" />
@@ -163,8 +166,13 @@
     <ClInclude Include="Source\Crop.h" />
     <ClInclude Include="Source\DrawImageManager.h" />
     <ClInclude Include="Source\GameManager.h" />
+    <ClInclude Include="Source\MessageManager.h" />
     <ClInclude Include="Source\PlayScene.h" />
+    <ClInclude Include="Source\SceneBase.h" />
+    <ClInclude Include="Source\SceneManager.h" />
+    <ClInclude Include="Source\SceneType.h" />
     <ClInclude Include="Source\Screen.h" />
+    <ClInclude Include="Source\TitleScene.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

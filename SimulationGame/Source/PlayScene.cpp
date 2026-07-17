@@ -9,15 +9,33 @@ PlayScene::PlayScene()
 
 	// 初期所持金
 	money = 100;
+
+	prevNextDayKey = false;
+	prevAddWaterKey = false;
+	prevHarvestKey = false;
+	prevRefillKey = false;
+	prevLeftKey = false;
+	prevRightKey = false;
+	prevPlantKey = false;
+	prevSeed1Key = false;
+	prevSeed2Key = false;
+	prevSeed3Key = false;
+	prevEscKey = false;
 }
 
 PlayScene::~PlayScene()
 {
 }
 
-void PlayScene::Update()
+SceneType PlayScene::Update()
 {
-	if (gameManager.IsGameOver() || gameManager.IsGameClear()) { return; }
+	// ESCでタイトルへ
+	if (IsKeyPressedOnce(KEY_INPUT_T,prevEscKey))
+	{
+		return SceneType::Title;
+	}
+
+	if (gameManager.IsGameOver() || gameManager.IsGameClear()) { return SceneType::Play; }
 
 	UpdateInput();
 
@@ -29,11 +47,14 @@ void PlayScene::Update()
 
 	gameManager.CheckGameOver(*this);
 	gameManager.CheckGameClear(*this);
+
+	// シーン変更なし
+	return SceneType::Play;
 }
 
 void PlayScene::Draw()
 {
-	drawImageManager.Draw(*this);
+	drawImageManager.Draw(*this, messageManager);
 
 	//DrawCropInfo();
 	//DrawCropState();
@@ -95,6 +116,11 @@ int PlayScene::GetRunningCost() const
 int PlayScene::GetSelectIndex() const
 {
 	return selectIndex;
+}
+
+CropType PlayScene::GetSelectCropType() const
+{
+	return selectCropType;
 }
 
 const Crop& PlayScene::GetCrop(int index) const
@@ -183,6 +209,9 @@ void PlayScene::UpdateNextDay()
 		{
 			crops[i].NextDay();
 		}
+
+		messageManager.NextDay();
+
 		money -= runningCost;
 	}
 }
@@ -234,6 +263,11 @@ void PlayScene::UpdateHarvest()
 			else if (waterRate > 0)
 			{
 				sellPrice *= 0.5f;
+			}
+
+			if (messageManager.IsDoublePriceDay())
+			{
+				sellPrice *= 2;
 			}
 
 			money += sellPrice;

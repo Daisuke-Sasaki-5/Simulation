@@ -2,12 +2,15 @@
 #include "Crop.h"
 #include "GameManager.h"
 #include "DrawImageManager.h"
+#include "MessageManager.h"
+#include "SceneBase.h"
 
-class PlayScene
+class PlayScene : public SceneBase
 {
 private:
 	GameManager gameManager;
 	DrawImageManager drawImageManager;
+	MessageManager messageManager;
 
 	// Image
 	int CarrotHandle;
@@ -33,6 +36,8 @@ private:
 	bool prevLeftKey;
 	bool prevRightKey;
 	bool prevPlantKey;
+
+	bool prevEscKey;
 
 	bool prevSeed1Key;
 	bool prevSeed2Key;
@@ -67,8 +72,8 @@ public:
 	PlayScene();
 	~PlayScene();
 
-	void Update();
-	void Draw();
+	SceneType Update() override;
+	void Draw() override;
 
 	// äOïîéQè∆óp
 	int GetMoney() const;
@@ -76,6 +81,7 @@ public:
 	int GetMaxPlayerWater() const;
 	int GetRunningCost() const;
 	int GetSelectIndex() const;
+	CropType GetSelectCropType()const;
 
 	const Crop& GetCrop(int index)const;
 };

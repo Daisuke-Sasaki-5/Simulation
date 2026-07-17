@@ -1,5 +1,6 @@
 #pragma once
 
+#include "MessageManager.h"
 class PlayScene;
 
 class  DrawImageManager
@@ -8,9 +9,11 @@ public:
 	 DrawImageManager();
 	~ DrawImageManager();
 
-	void Draw(const PlayScene& scene);
+	void Draw(const PlayScene& scene, const MessageManager& message);
 
 private:
+	int BackGround;
+
 	int bigFont;
 
 	int handle;
@@ -18,6 +21,10 @@ private:
 	int slotHandle;
 
 	int playerInfoHandle;
+	int controlIHandle;
+
+	int MessageHandle;
+	int selectImage;
 
 	int carrotHandle;
 	int PumpkinHandle;
@@ -37,4 +44,5 @@ private:
 	void DrawBar(int x, int y, int width, int height, float rate, int color);
 	void DrawPlayerInfo(const PlayScene& scene);
 	void DrawSelectField(const PlayScene& scene);
+	void DrawSelectSeed(const PlayScene& scene);
 };
