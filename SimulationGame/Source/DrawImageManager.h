@@ -10,9 +10,16 @@ public:
 	~ DrawImageManager();
 
 	void Draw(const PlayScene& scene, const MessageManager& message);
+	void DrawTitle();
 
 private:
 	int BackGround;
+	int TitleBackGround;
+
+	// ƒ^ƒCƒgƒ‹‰æ–Ê
+	int titleImageHandle;
+	int pressEnterImageHandle;
+	int escExitImageHandle1;
 
 	int bigFont;
 

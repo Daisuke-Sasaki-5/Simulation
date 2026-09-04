@@ -5,6 +5,12 @@
 DrawImageManager::DrawImageManager()
 {
 	BackGround = LoadGraph("Data/Image/BackGround.jpg");
+	TitleBackGround = LoadGraph("Data/Image/BackGround.jpg");
+
+	// タイトル画像
+	titleImageHandle = LoadGraph("Data/Image/Title.png");
+	//pressEnterImageHandle = LoadGraph("Data/Image/PressEnter.png");
+	//escExitImageHandle = LoadGraph("Data/Image/EscExit.png");
 
 	carrotHandle = LoadGraph("Data/Image/Carrot.png");
 	PumpkinHandle = LoadGraph("Data/Image/Pumpkin.png");
@@ -21,7 +27,7 @@ DrawImageManager::DrawImageManager()
 	slotHandle = LoadGraph("Data/Image/Slot.png");
 	playerInfoHandle = LoadGraph("Data/Image/PlayerInfo.png");
 
-	controlIHandle = LoadGraph("Data/Image/Guid.png");
+	controlIHandle = LoadGraph("Data/Image/Guid2.png");
 
 	MessageHandle = LoadGraph("Data/Image/Message.png");
 	selectImage = LoadGraph("Data/Image/SelectSeed.png");
@@ -46,6 +52,12 @@ DrawImageManager::~DrawImageManager()
 	DeleteGraph(controlIHandle);
 	DeleteGraph(MessageHandle);
 	DeleteGraph(BackGround);
+	DeleteGraph(TitleBackGround);
+	DeleteGraph(selectImage);
+
+	DeleteGraph(titleImageHandle);
+	//DeleteGraph(pressEnterImageHandle);
+	//DeleteGraph(escExitImageHandle)
 }
 
 void DrawImageManager::Draw(const PlayScene& scene, const MessageManager& message)
@@ -54,14 +66,15 @@ void DrawImageManager::Draw(const PlayScene& scene, const MessageManager& messag
 	DrawExtendGraph(0, 0, 1280, 720, BackGround, TRUE);
 	
 	// プレイヤー操作方法描画
-	DrawExtendGraph(-100, 0, 400, 720, controlIHandle, TRUE);
+	//DrawExtendGraph(-100, 0, 400, 720, controlIHandle, TRUE);
+	DrawExtendGraph(0, 50, 300, 700, controlIHandle, TRUE);
 
 	// プレイヤー情報（所持金、水タンク)描画
 	DrawExtendGraph(800, 20, 1100, 370, playerInfoHandle, TRUE);
 
 	// お知らせ描画
-	DrawExtendGraph(850, 550, 1050, 700, MessageHandle, TRUE);
-	DrawFormatString(1100, 630, GetColor(255, 255, 255), message.GetCurrentMessage());
+	DrawExtendGraph(820, 570, 1070, 720, MessageHandle, TRUE);
+	DrawFormatString(850, 640, GetColor(255, 255, 255), message.GetCurrentMessage());
 
 	// 各Image描画
 	DrawSlot();
@@ -70,6 +83,16 @@ void DrawImageManager::Draw(const PlayScene& scene, const MessageManager& messag
 	DrawPlayerInfo(scene);
 	DrawSelectField(scene);
 	DrawSelectSeed(scene);
+}
+
+/// <summary>
+/// タイトル表示
+/// </summary>
+void DrawImageManager::DrawTitle()
+{
+	DrawExtendGraph(0, 0, 1280, 720, TitleBackGround, TRUE);
+
+	DrawGraph(500, 200, titleImageHandle, TRUE);
 }
 
 void DrawImageManager::DrawSlot()
@@ -177,17 +200,17 @@ void DrawImageManager::DrawBar(int x, int y, int width, int height, float rate, 
 void DrawImageManager::DrawPlayerInfo(const PlayScene& scene)
 {
 	// 水タンク表示
-	DrawFormatStringToHandle(840, 230, GetColor(255, 255, 255), bigFont, TEXT("水タンク \n Tank : %d / %d"), scene.GetPlayerWater(), scene.GetMaxPlayerWater());
+	DrawFormatStringToHandle(820, 220, GetColor(255, 255, 255), bigFont, TEXT("水タンク \n Tank : %d / %d"), scene.GetPlayerWater(), scene.GetMaxPlayerWater());
 	float rate = (float)scene.GetPlayerWater() / scene.GetMaxPlayerWater();
-	DrawBar(840, 330, 240, 35, rate, GetColor(0, 180, 255));
+	DrawBar(830, 310, 230, 35, rate, GetColor(0, 180, 255));
 
 	// 所持金表示
-	DrawFormatStringToHandle(850, 130, GetColor(255, 255, 255), bigFont, TEXT("所持金 \n Money : %d G"), scene.GetMoney());
+	DrawFormatStringToHandle(820, 130, GetColor(255, 255, 255), bigFont, TEXT("所持金 \n Money : %d G"), scene.GetMoney());
 }
 
 void DrawImageManager::DrawSelectField(const PlayScene& scene)
 {
-	DrawFormatStringToHandle(280, 110 + scene.GetSelectIndex() * 150, GetColor(255, 255, 0), bigFont, ">");
+	DrawFormatStringToHandle(300, 110 + scene.GetSelectIndex() * 150, GetColor(255, 255, 0), bigFont, ">");
 }
 
 void DrawImageManager::DrawSelectSeed(const PlayScene& scene)
@@ -206,7 +229,7 @@ void DrawImageManager::DrawSelectSeed(const PlayScene& scene)
 		break;
 	}
 
-	DrawExtendGraph(820, 400, 1120, 600, selectImage, TRUE);
-	DrawExtendGraph(820, 430, 1120, 610, handle, TRUE);
+	DrawExtendGraph(800, 380, 1100, 580, selectImage, TRUE);
+	DrawExtendGraph(800, 410, 1100, 590, handle, TRUE);
 }
 

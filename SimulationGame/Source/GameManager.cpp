@@ -54,3 +54,9 @@ bool GameManager::IsGameClear() const
 {
 	return isGameClear;
 }
+
+void GameManager::Reset()
+{
+	isGameOver = false;
+	isGameClear = false;
+}

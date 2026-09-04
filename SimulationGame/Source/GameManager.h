@@ -14,4 +14,6 @@ public:
 
 	bool IsGameOver()const;
 	bool IsGameClear()const;
+
+	void Reset();
 };

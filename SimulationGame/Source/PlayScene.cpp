@@ -1,4 +1,5 @@
 #include "PlayScene.h"
+#include "Screen.h"
 #include "DxLib.h"
 #include <string>
 
@@ -17,19 +18,38 @@ PlayScene::PlayScene()
 	prevLeftKey = false;
 	prevRightKey = false;
 	prevPlantKey = false;
+	prevRemoveDeadKey = false;
 	prevSeed1Key = false;
 	prevSeed2Key = false;
 	prevSeed3Key = false;
 	prevEscKey = false;
+
+	clearImageHandle = LoadGraph("Data/Image/GameClear.png");
+	gameOverImageHandle = LoadGraph("Data/Image/GameOver.png");
 }
 
 PlayScene::~PlayScene()
 {
+	DeleteGraph(clearImageHandle);
+	DeleteGraph(gameOverImageHandle);
 }
 
 SceneType PlayScene::Update()
 {
-	// ESCでタイトルへ
+	// リザルト中
+	if (resultType != ResultType::None)
+	{
+		UpdateResult();
+
+		if (resultTimer >= ResultDisplayFrame)
+		{
+			return SceneType::Title;
+		}
+
+		return SceneType::Play;
+	}
+
+	// Tでタイトルへ
 	if (IsKeyPressedOnce(KEY_INPUT_T,prevEscKey))
 	{
 		return SceneType::Title;
@@ -43,10 +63,24 @@ SceneType PlayScene::Update()
 	UpdateWater();
 	UpdateHarvest();
 	UpdatePlant();
+	UpdateRemoveDead();
 	UpdateRefill();
 
 	gameManager.CheckGameOver(*this);
 	gameManager.CheckGameClear(*this);
+
+	// ゲームオーバー判定
+	if (gameManager.IsGameOver())
+	{
+		resultType = ResultType::GameOver;
+		resultTimer = 0;
+	}
+	// ゲームクリア判定
+	else if (gameManager.IsGameClear())
+	{
+		resultType = ResultType::Clear;
+		resultTimer = 0;
+	}
 
 	// シーン変更なし
 	return SceneType::Play;
@@ -55,6 +89,8 @@ SceneType PlayScene::Update()
 void PlayScene::Draw()
 {
 	drawImageManager.Draw(*this, messageManager);
+
+	DrawResult();
 
 	//DrawCropInfo();
 	//DrawCropState();
@@ -75,17 +111,17 @@ void PlayScene::Draw()
 		break;
 	}
 
-	DrawFormatString(300, 650, GetColor(255, 255, 255), "Selected : %s", seedName);
+	//DrawFormatString(300, 650, GetColor(255, 255, 255), "Selected : %s", seedName);
 
-	if (gameManager.IsGameOver())
-	{
-		DrawString(400, 300, "GAME OVER", GetColor(255, 0, 0));
-	}
+	//if (gameManager.IsGameOver())
+	//{
+	//	DrawString(400, 300, "GAME OVER", GetColor(255, 0, 0));
+	//}
 
-	if (gameManager.IsGameClear())
-	{
-		DrawString(400, 300, "GAME Clear", GetColor(0, 255, 0));
-	}
+	//if (gameManager.IsGameClear())
+	//{
+	//	DrawString(400, 300, "GAME Clear", GetColor(0, 255, 0));
+	//}
 }
 
 /// <summary>
@@ -297,6 +333,22 @@ void PlayScene::UpdatePlant()
 }
 
 /// <summary>
+/// 枯れた作物削除
+/// </summary>
+void PlayScene::UpdateRemoveDead()
+{
+	if (crops[selectIndex].GetState() != CropState::Dead)
+	{
+		return;
+	}
+
+	if (IsKeyPressedOnce(KEY_INPUT_C, prevRemoveDeadKey))
+	{
+		crops[selectIndex].Clear();
+	}
+}
+
+/// <summary>
 /// 価格取得
 /// </summary>
 int PlayScene::GetSeedPrice(CropType type)
@@ -335,6 +387,86 @@ void PlayScene::UpdateRefill()
 			playerWater = maxPlayerWater;
 		}
 	}
+}
+
+void PlayScene::UpdateResult()
+{
+	resultTimer++;
+}
+
+void PlayScene::DrawResult()
+{
+	if (resultType == ResultType::None) { return; }
+
+	// 半透明の黒画面
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, ResultMaxAlpha);
+
+	DrawBox(0, 0, Screen::WIDTH, Screen::HEIGHT, GetColor(0, 0, 0), TRUE);
+
+	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+
+	// 表示する画像を決定
+	int handle = -1;
+
+	if (resultType == ResultType::Clear)
+	{
+		handle = clearImageHandle;
+	}
+	else if (resultType == ResultType::GameOver)
+	{
+		handle = gameOverImageHandle;
+	}
+
+	if (handle != -1)
+	{
+		int imageWidth = 0;
+		int imageHeight = 0;
+
+		GetGraphSize(handle, &imageWidth, &imageHeight);
+
+		int x = (Screen::WIDTH - imageWidth) / 2;
+		int y = (Screen::HEIGHT - imageHeight) / 2;
+
+		DrawGraph(x, y, handle, TRUE);
+	}
+}
+
+/// <summary>
+/// ゲームをリセットする関数
+/// </summary>
+void PlayScene::Reset()
+{
+	playerWater = 10;
+	maxPlayerWater = 10;
+
+	// 初期所持金
+	money = 100;
+
+	prevNextDayKey = false;
+	prevAddWaterKey = false;
+	prevHarvestKey = false;
+	prevRefillKey = false;
+	prevLeftKey = false;
+	prevRightKey = false;
+	prevPlantKey = false;
+	prevRemoveDeadKey = false;
+	prevSeed1Key = false;
+	prevSeed2Key = false;
+	prevSeed3Key = false;
+	prevEscKey = false;
+
+	selectIndex = 0;
+	selectCropType = CropType::Cheap;
+
+	resultType = ResultType::None;
+	resultTimer = 0;
+
+	for (int i = 0; i < 4; i++)
+	{
+		crops[i].Clear();
+	}
+
+	gameManager.Reset();
 }
 
 /// <summary>

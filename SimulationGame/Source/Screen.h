@@ -1,4 +1,5 @@
 #pragma once
+#include "DxLib.h"
 
 /// <summary>
 /// Window‚Ì’è‹`‚ð‚µ‚Ü‚·

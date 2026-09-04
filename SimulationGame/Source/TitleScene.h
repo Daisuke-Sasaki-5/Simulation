@@ -8,6 +8,8 @@ public:
 	void Draw() override;
 
 private :
+	int escExitImageHandle = -1;
+
 	bool prevEnterKey = false;
 	bool prevEscKey = false;
 

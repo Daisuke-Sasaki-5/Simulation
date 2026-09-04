@@ -12,6 +12,13 @@ private:
 	DrawImageManager drawImageManager;
 	MessageManager messageManager;
 
+	enum class ResultType
+	{
+		None,
+		Clear,
+		GameOver
+	};
+
 	// Image
 	int CarrotHandle;
 
@@ -36,6 +43,7 @@ private:
 	bool prevLeftKey;
 	bool prevRightKey;
 	bool prevPlantKey;
+	bool prevRemoveDeadKey;
 
 	bool prevEscKey;
 
@@ -61,8 +69,22 @@ private:
 	void UpdateWater();
 	void UpdateHarvest();
 	void UpdatePlant();
+	void UpdateRemoveDead();
 	int GetSeedPrice(CropType type);
 	void UpdateRefill();
+
+	// Resultèàóù
+	ResultType resultType = ResultType::None;
+	int resultTimer = 0;
+
+	static constexpr int ResultDisplayFrame = 180;
+	static constexpr int ResultMaxAlpha = 160;
+
+	int clearImageHandle = -1;
+	int gameOverImageHandle = -1;
+
+	void UpdateResult();
+	void DrawResult();
 
 	// Drawä÷êîï™ÇØ
 	void DrawCropInfo();   // çÏï®ÇÃï\é¶
@@ -84,4 +106,6 @@ public:
 	CropType GetSelectCropType()const;
 
 	const Crop& GetCrop(int index)const;
+
+	void Reset();
 };

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -146,10 +146,12 @@
     <ClCompile Include="Library\DrawWorld.cpp" />
     <ClCompile Include="Source\Crop.cpp" />
     <ClCompile Include="Source\DrawImageManager.cpp" />
+    <ClCompile Include="Source\FadeManager.cpp" />
     <ClCompile Include="Source\GameManager.cpp" />
     <ClCompile Include="Source\MessageManager.cpp" />
     <ClCompile Include="Source\PlayScene.cpp" />
     <ClCompile Include="Source\SceneManager.cpp" />
+    <ClCompile Include="Source\SoundManager.cpp" />
     <ClCompile Include="Source\TitleScene.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -165,6 +167,7 @@
     <ClInclude Include="ImGui\imstb_truetype.h" />
     <ClInclude Include="Source\Crop.h" />
     <ClInclude Include="Source\DrawImageManager.h" />
+    <ClInclude Include="Source\FadeManager.h" />
     <ClInclude Include="Source\GameManager.h" />
     <ClInclude Include="Source\MessageManager.h" />
     <ClInclude Include="Source\PlayScene.h" />
@@ -172,6 +175,7 @@
     <ClInclude Include="Source\SceneManager.h" />
     <ClInclude Include="Source\SceneType.h" />
     <ClInclude Include="Source\Screen.h" />
+    <ClInclude Include="Source\SoundManager.h" />
     <ClInclude Include="Source\TitleScene.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
