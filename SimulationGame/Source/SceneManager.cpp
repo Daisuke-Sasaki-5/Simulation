@@ -5,6 +5,9 @@ SceneManager::SceneManager()
 {
 	currentScene = SceneType::Title;
 	nextScene = SceneType::Title;
+
+	isShowingStartInfo = false;
+	startInfoTimer = 0;
 }
 
 void SceneManager::Update()
@@ -19,7 +22,19 @@ void SceneManager::Update()
 		{
 			ChangeScene(nextScene);
 		}
+		return;
+	}
 
+	// ゲーム開始説明表示中
+	if (isShowingStartInfo)
+	{
+		startInfoTimer++;
+
+		if (startInfoTimer >= StartInfoDisplayFrame)
+		{
+			isShowingStartInfo = false;
+			startInfoTimer = 0;
+		}
 		return;
 	}
 
@@ -54,6 +69,12 @@ void SceneManager::Draw()
 		break;
 	}
 
+	// 開始説明画像
+	if (isShowingStartInfo)
+	{
+		drawImageManager.DrawStartInfo();
+	}
+
 	// 最後にフェードを描画
 	fadeManager.Draw();
 }
@@ -63,6 +84,9 @@ void SceneManager::ChangeScene(SceneType scene)
 	if (scene == SceneType::Play)
 	{
 		playScene.Reset();
+
+		isShowingStartInfo = true;
+		startInfoTimer = 0;
 	}
 
 	currentScene = scene;

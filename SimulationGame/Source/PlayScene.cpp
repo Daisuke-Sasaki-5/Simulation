@@ -91,37 +91,6 @@ void PlayScene::Draw()
 	drawImageManager.Draw(*this, messageManager);
 
 	DrawResult();
-
-	//DrawCropInfo();
-	//DrawCropState();
-
-	// ‘I‘ð’†‚ÌŽí•\Ž¦
-	const char* seedName = "";
-
-	switch (selectCropType)
-	{
-	case CropType::Cheap:
-		seedName = "Cheap";
-		break;
-	case CropType::Normal:
-		seedName = "Normal";
-		break;
-	case CropType::Rare:
-		seedName = "Rare";
-		break;
-	}
-
-	//DrawFormatString(300, 650, GetColor(255, 255, 255), "Selected : %s", seedName);
-
-	//if (gameManager.IsGameOver())
-	//{
-	//	DrawString(400, 300, "GAME OVER", GetColor(255, 0, 0));
-	//}
-
-	//if (gameManager.IsGameClear())
-	//{
-	//	DrawString(400, 300, "GAME Clear", GetColor(0, 255, 0));
-	//}
 }
 
 /// <summary>

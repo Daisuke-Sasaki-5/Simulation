@@ -22,6 +22,12 @@ private:
 	TitleScene titleScene;
 	PlayScene playScene;
 	DrawImageManager drawImageManager;
-	//SoundManager soundManager;
+	SoundManager soundManager;
 	FadeManager fadeManager;
+
+	// ===== ゲーム開始演出 =====
+	bool isShowingStartInfo;
+	int startInfoTimer;
+
+	static constexpr int StartInfoDisplayFrame = 120;
 };

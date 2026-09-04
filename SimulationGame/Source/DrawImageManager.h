@@ -11,6 +11,7 @@ public:
 
 	void Draw(const PlayScene& scene, const MessageManager& message);
 	void DrawTitle();
+	void DrawStartInfo();
 
 private:
 	int BackGround;
@@ -19,11 +20,13 @@ private:
 	// ƒ^ƒCƒgƒ‹‰æ–Ê
 	int titleImageHandle;
 	int pressEnterImageHandle;
-	int escExitImageHandle1;
+	int escExitImageHandle;
 
 	int bigFont;
+	int ArrowFont;
 
 	int handle;
+	int startInfoHandle;
 
 	int slotHandle;
 

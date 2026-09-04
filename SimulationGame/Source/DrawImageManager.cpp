@@ -9,8 +9,11 @@ DrawImageManager::DrawImageManager()
 
 	// タイトル画像
 	titleImageHandle = LoadGraph("Data/Image/Title.png");
-	//pressEnterImageHandle = LoadGraph("Data/Image/PressEnter.png");
-	//escExitImageHandle = LoadGraph("Data/Image/EscExit.png");
+	pressEnterImageHandle = LoadGraph("Data/Image/PressEnter.png");
+	escExitImageHandle = LoadGraph("Data/Image/EscExit.png");
+
+	// ゲーム開始時、説明画像
+	startInfoHandle = LoadGraph("Data/Image/GameStart.png");
 
 	carrotHandle = LoadGraph("Data/Image/Carrot.png");
 	PumpkinHandle = LoadGraph("Data/Image/Pumpkin.png");
@@ -33,11 +36,13 @@ DrawImageManager::DrawImageManager()
 	selectImage = LoadGraph("Data/Image/SelectSeed.png");
 
 	bigFont = CreateFontToHandle(NULL, 32, 3);
+	ArrowFont = CreateFontToHandle(NULL, 64, 3);
 }
 
 DrawImageManager::~DrawImageManager()
 {
 	DeleteFontToHandle(bigFont);
+	DeleteFontToHandle(ArrowFont);
 	DeleteGraph(carrotHandle);
 	DeleteGraph(carrotgrawHandle);
 	DeleteGraph(PumpkinHandle);
@@ -56,8 +61,10 @@ DrawImageManager::~DrawImageManager()
 	DeleteGraph(selectImage);
 
 	DeleteGraph(titleImageHandle);
-	//DeleteGraph(pressEnterImageHandle);
-	//DeleteGraph(escExitImageHandle)
+	DeleteGraph(pressEnterImageHandle);
+	DeleteGraph(escExitImageHandle);
+
+	DeleteGraph(startInfoHandle);
 }
 
 void DrawImageManager::Draw(const PlayScene& scene, const MessageManager& message)
@@ -92,7 +99,27 @@ void DrawImageManager::DrawTitle()
 {
 	DrawExtendGraph(0, 0, 1280, 720, TitleBackGround, TRUE);
 
-	DrawGraph(500, 200, titleImageHandle, TRUE);
+	DrawGraph(250, 100, titleImageHandle, TRUE);
+
+	DrawGraph(580, 350, pressEnterImageHandle, TRUE);
+
+	DrawGraph(680, 500, escExitImageHandle, TRUE);
+}
+
+/// <summary>
+/// ゲーム開始時、説明画像表示
+/// </summary>
+void DrawImageManager::DrawStartInfo()
+{
+	int width;
+	int height;
+
+	GetGraphSize(startInfoHandle, &width, &height);
+
+	int x = (1280 - width) / 2;
+	int y = (720 - height) / 2;
+
+	DrawGraph(x, y, startInfoHandle, TRUE);
 }
 
 void DrawImageManager::DrawSlot()
@@ -210,7 +237,7 @@ void DrawImageManager::DrawPlayerInfo(const PlayScene& scene)
 
 void DrawImageManager::DrawSelectField(const PlayScene& scene)
 {
-	DrawFormatStringToHandle(300, 110 + scene.GetSelectIndex() * 150, GetColor(255, 255, 0), bigFont, ">");
+	DrawFormatStringToHandle(300, 110 + scene.GetSelectIndex() * 150, GetColor(255, 255, 0), ArrowFont, ">");
 }
 
 void DrawImageManager::DrawSelectSeed(const PlayScene& scene)
